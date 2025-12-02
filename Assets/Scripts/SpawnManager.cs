@@ -16,7 +16,7 @@ public class SpawnManager : MonoBehaviour
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     
-    void Start()
+    public void StartSpawning()
     {
         StartCoroutine(SpawnEnemyRoutine());
         StartCoroutine(SpawnPowerUpRoutine());
@@ -24,6 +24,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnEnemyRoutine()
     {
+        yield return new WaitForSeconds(3f);
         while (_stopSpawning == false)
         {
             Vector3 randomPos = new Vector3(Random.Range(-9, 9), 7.28f, 0);
@@ -35,6 +36,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnPowerUpRoutine()
     {
+        yield return new WaitForSeconds(3f);
         while (_stopSpawning == false)
         {
             int randomSec = Random.Range(3, 7);

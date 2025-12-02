@@ -7,11 +7,8 @@ public class PowerUp : MonoBehaviour
 
     [Tooltip("ID 0-> Triple shot \nID 1-> Speed \nID 2-> Shield")]
     [SerializeField] private int _powerUpID;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+
+    [SerializeField] private AudioClip _clip;
 
     // Update is called once per frame
     void Update()
@@ -26,6 +23,7 @@ public class PowerUp : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            AudioSource.PlayClipAtPoint(_clip,transform.position);
             Player player = other.transform.GetComponent<Player>();
             switch (_powerUpID)
             {

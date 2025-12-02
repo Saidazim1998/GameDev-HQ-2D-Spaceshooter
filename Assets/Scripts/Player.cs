@@ -12,12 +12,14 @@ public class Player : MonoBehaviour
     [SerializeField] private float _fireRate = 0.15f;
     private float _canFire = -1f;
     
-    [SerializeField] private int _health = 3;
+    [SerializeField] private float _health = 3;
     [SerializeField] private Color32 _damageColor;
 
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private GameObject _triplelaserPrefab;
     [SerializeField] private GameObject _shieldVisualizer;
+    [SerializeField] private GameObject _rightEngineHurt;
+    [SerializeField] private GameObject _leftEngineHurt;
     
     private bool _isTripleShotActive = false;
     private bool _isSpeeBoostActive = false;
@@ -26,12 +28,25 @@ public class Player : MonoBehaviour
 
     [SerializeField] private int _score; 
     private UI_Manager _uiManager;
+
+    [SerializeField] private AudioClip _laserSoundClip;
+    private AudioSource _audioSource;
     
     void Start()
     {
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UI_Manager>();
         transform.position = Vector3.zero;
+        _audioSource = GetComponent<AudioSource>();
+
+        if (_audioSource==null)
+        {
+            Debug.Log("Audio source is NULL!");
+        }
+        else
+        {
+            _audioSource.clip = _laserSoundClip;
+        }
     }
 
     // Update is called once per frame
@@ -57,6 +72,8 @@ public class Player : MonoBehaviour
             Vector3 spawnPos = transform.position + new Vector3(0f, 1.05f, 0f);
             Instantiate(_laserPrefab, spawnPos, Quaternion.identity);    
         }
+        
+        _audioSource.Play();
     }
 
     private void CalculateMovement()
@@ -80,7 +97,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         if (_isShieldsActive)
         {
@@ -90,7 +107,16 @@ public class Player : MonoBehaviour
         }
         
         _health -= damage;
-        _uiManager.UpdateLives(_health);
+        int livesIndex = (int)_health;
+        _uiManager.UpdateLives(livesIndex);
+        if (_health == 2)
+        {
+            _rightEngineHurt.SetActive(true);
+        }
+        else if(_health == 1)
+        {
+            _leftEngineHurt.SetActive(true);
+        }
         Debug.Log("Player's health = "+_health);
 
         StartCoroutine(ChangeColor());
