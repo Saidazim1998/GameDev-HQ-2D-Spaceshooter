@@ -12,6 +12,11 @@ public class Asteroid : MonoBehaviour
     private void Start()
     {
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+        if (_spawnManager == null)
+        {
+            Debug.LogError("There is no any gameobject with name Spawn_Manager.");
+            return;
+        }
     }
 
     void Update()
@@ -23,7 +28,7 @@ public class Asteroid : MonoBehaviour
     {
         if (other.CompareTag("Laser"))
         {
-            Instantiate(_explosionPrefab, transform.position, quaternion.identity);
+            Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
             Destroy(other.gameObject);
             _spawnManager.StartSpawning();
             Destroy(gameObject,0.25f);

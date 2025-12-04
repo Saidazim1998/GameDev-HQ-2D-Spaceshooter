@@ -7,6 +7,7 @@ public class Laser : MonoBehaviour
     private float _speed = 8f;
 
     private bool _isEnemyLaser = false;
+
     void Update()
     {
         if (_isEnemyLaser == false)
@@ -31,6 +32,7 @@ public class Laser : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    
     private void MoveDown()
     {
         transform.Translate(Vector3.down*_speed*Time.deltaTime);

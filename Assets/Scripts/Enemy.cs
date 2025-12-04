@@ -1,7 +1,4 @@
-using System;
-using Unity.Mathematics;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour
 {
@@ -37,6 +34,12 @@ public class Enemy : MonoBehaviour
 
         if (Time.time>_canFire)
         {
+           FireLaser();
+        }
+    }
+
+    private void FireLaser()
+    {
             _fireRate = Random.Range(3f, 7f);
             _canFire = Time.time + _fireRate;
             GameObject laser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
@@ -45,7 +48,7 @@ public class Enemy : MonoBehaviour
             {
                 lasers[i].AssignEnemyLaser();
             }
-        }
+
     }
 
     private void CalculateMovement()
@@ -63,19 +66,13 @@ public class Enemy : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Player player = other.GetComponent<Player>();
+            Player player = other.transform.GetComponent<Player>();
             if (player!=null)
             {
                 player.TakeDamage(_damage);
             }
             
-            _animator.SetTrigger("OnEnemyDestroyed");
-            _speed = 0;
-            
-            _audioSource.Play();
-            Destroy(GetComponent<Collider2D>());
-
-            Destroy(gameObject,2.8f);
+            DestoryingEnemy();
         }
 
         if (other.CompareTag("Laser"))
@@ -86,13 +83,20 @@ public class Enemy : MonoBehaviour
                 _player.AddScore(10);
             }
             
-            _animator.SetTrigger("OnEnemyDestroyed");
+            DestoryingEnemy();
+            
+        }
+    }
+    
+    private void DestoryingEnemy()
+    {
+        _animator.SetTrigger("OnEnemyDestroyed");
             _speed = 0;
             
             _audioSource.Play();
             Destroy(GetComponent<Collider2D>());
             
             Destroy(gameObject,2.8f);
-        }
+
     }
 }

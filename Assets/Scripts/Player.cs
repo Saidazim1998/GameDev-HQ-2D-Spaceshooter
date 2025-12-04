@@ -1,7 +1,5 @@
 using System.Collections;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
@@ -35,7 +33,19 @@ public class Player : MonoBehaviour
     void Start()
     {
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+        if (_spawnManager == null)
+        {
+            Debug.LogError("There is no gameobejct with name Spawn_Manager");
+            return;
+        } 
+
         _uiManager = GameObject.Find("Canvas").GetComponent<UI_Manager>();
+        if (_uiManager == null)
+        {
+            Debug.LogError("There is no gameobject with name Canvas.");
+            return ;
+        }
+
         transform.position = Vector3.zero;
         _audioSource = GetComponent<AudioSource>();
 
@@ -65,7 +75,7 @@ public class Player : MonoBehaviour
         _canFire = Time.time + _fireRate;
         if (_isTripleShotActive)
         {
-            Instantiate(_triplelaserPrefab, transform.position, quaternion.identity);
+            Instantiate(_triplelaserPrefab, transform.position, Quaternion.identity);
         }
         else
         {
@@ -109,6 +119,7 @@ public class Player : MonoBehaviour
         _health -= damage;
         int livesIndex = (int)_health;
         _uiManager.UpdateLives(livesIndex);
+
         if (_health == 2)
         {
             _rightEngineHurt.SetActive(true);
@@ -117,6 +128,7 @@ public class Player : MonoBehaviour
         {
             _leftEngineHurt.SetActive(true);
         }
+
         Debug.Log("Player's health = "+_health);
 
         StartCoroutine(ChangeColor());

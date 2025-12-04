@@ -8,7 +8,7 @@ public class UI_Manager : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI _scoreText;
     [SerializeField]
-    private Image _LivesImg;
+    private Image _livesImg;
     [SerializeField]
     private Sprite[] _livesSprites;
     [SerializeField]
@@ -23,8 +23,8 @@ public class UI_Manager : MonoBehaviour
     {
         _scoreText.text = "Score: " + 0;
         _gameOverText.gameObject.SetActive(false);
-        _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
 
+        _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
         if (_gameManager==null)
         {
             Debug.LogError("GameManager is NULL.");
@@ -38,7 +38,12 @@ public class UI_Manager : MonoBehaviour
 
     public void UpdateLives(int currentLives)
     {
-        _LivesImg.sprite = _livesSprites[currentLives];
+        if(currentLives<0 || currentLives >=_livesSprites.Length)
+        {
+            return;
+        }
+        _livesImg.sprite = _livesSprites[currentLives];
+
         if (currentLives==0)
         {
             GameOverSequence();
