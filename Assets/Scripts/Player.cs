@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
     private bool _isTripleShotActive = false;
     private bool _isSpeeBoostActive = false;
     private bool _isShieldsActive = false;
+    private bool _isSpeedUpActive = false;
     private SpawnManager _spawnManager;
 
     [SerializeField] private int _score; 
@@ -67,6 +68,19 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
             FireLaser();
+        }
+
+        if(Input.GetKeyDown(KeyCode.LeftShift) && !_isSpeedUpActive)
+        {
+            _speed *=_speedMultiplier;
+            _isSpeedUpActive = true;
+            _uiManager.EmptyingSlider();
+        }
+        if(Input.GetKeyUp(KeyCode.LeftShift) && _isSpeedUpActive)
+        {
+            _speed /=_speedMultiplier;
+            _isSpeedUpActive = false;
+            _uiManager.FillingSlider();
         }
     }
 

@@ -15,12 +15,17 @@ public class UI_Manager : MonoBehaviour
     private TextMeshProUGUI _gameOverText;
     [SerializeField]
     private TextMeshProUGUI _restartText;
+    [SerializeField]
+    private Slider _speedChargeSlider;
+
+    [SerializeField] private float _speedChargeValue = 3f;
 
     private GameManager _gameManager; 
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        FillingSlider();
         _scoreText.text = "Score: " + 0;
         _gameOverText.gameObject.SetActive(false);
 
@@ -68,4 +73,39 @@ public class UI_Manager : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
     }
+
+    public void FillingSlider()
+    {
+        StopCoroutine(EmptyingSliderCoroutine());
+
+        StartCoroutine(FillingSliderCoroutine());
+    }
+
+    IEnumerator FillingSliderCoroutine()
+    {
+        while (_speedChargeSlider.normalizedValue <1)
+        {
+            _speedChargeSlider.normalizedValue +=_speedChargeValue;
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    public void EmptyingSlider()
+    {
+        StopCoroutine(FillingSliderCoroutine());
+
+        StartCoroutine(EmptyingSliderCoroutine());
+    }
+
+    IEnumerator EmptyingSliderCoroutine()
+    {
+        float emptyValue = _speedChargeValue / 4;
+        while (_speedChargeSlider.normalizedValue>0)
+        {
+            _speedChargeSlider.normalizedValue -= 0.025f;
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    
 }
